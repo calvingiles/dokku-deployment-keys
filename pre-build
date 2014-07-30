@@ -40,3 +40,18 @@ docker commit $idWithPublicKeys $IMAGE > /dev/null
 idWithConfig=$(echo "IdentityFile /app/.ssh/id_rsa" | docker run -i -a stdin $IMAGE /bin/bash -c "cat >> /etc/ssh/ssh_config" )
 test $(docker wait $idWithConfig) -eq 0
 docker commit $idWithConfig $IMAGE > /dev/null
+
+# 4. Add user option to global SSH config
+idWithSSHUser=$(echo "User git" | docker run -i -a stdin $IMAGE /bin/bash -c "cat >> /etc/ssh/ssh_config" )
+test $(docker wait $idWithSSHUser) -eq 0
+docker commit $idWithSSHUser $IMAGE > /dev/null
+
+# 5. Add a global identity file to the global SSH config
+idWithKnownHosts=$(echo "GlobalKnownHostsFile /app/.ssh/known_hosts" | docker run -i -a stdin $IMAGE /bin/bash -c "cat >> /etc/ssh/ssh_config" )
+test $(docker wait $idWithKnownHosts) -eq 0
+docker commit $idWithKnownHosts $IMAGE > /dev/null
+
+# 6. Add bitbucket.org as a known host
+idWithKeyScan=$(docker run -i -a stdin $IMAGE /bin/bash -c "ssh-keyscan -H bitbucket.org > /app/.ssh/known_hosts")
+test $(docker wait $idWithKeyScan) -eq 0
+docker commit $idWithKeyScan $IMAGE > /dev/null
