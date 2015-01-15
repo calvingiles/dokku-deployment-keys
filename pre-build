@@ -51,7 +51,7 @@ idWithKnownHosts=$(echo "GlobalKnownHostsFile /app/.ssh/known_hosts" | docker ru
 test $(docker wait $idWithKnownHosts) -eq 0
 docker commit $idWithKnownHosts $IMAGE > /dev/null
 
-# 6. Add bitbucket.org as a known host
-idWithKeyScan=$(docker run -i -a stdin $IMAGE /bin/bash -c "ssh-keyscan -H bitbucket.org > /app/.ssh/known_hosts")
-test $(docker wait $idWithKeyScan) -eq 0
-docker commit $idWithKeyScan $IMAGE > /dev/null
+# # 6. Add bitbucket.org as a known host
+# idWithKeyScan=$(docker run -i -a stdin $IMAGE /bin/bash -c "ssh-keyscan -H bitbucket.org > /app/.ssh/known_hosts")
+# test $(docker wait $idWithKeyScan) -eq 0
+# docker commit $idWithKeyScan $IMAGE > /dev/null
